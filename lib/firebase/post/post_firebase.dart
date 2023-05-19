@@ -113,10 +113,10 @@ class Post_firebase
     String current_user_uid = FirebaseAuth.instance.currentUser!.uid;
     String result="";
     try{
-      if (follow.contains(current_user_uid))
+      if (follow.contains(uid))
       {
         await _firestore.collection('users').doc(current_user_uid).update({
-          'following': FieldValue.arrayRemove([FirebaseAuth.instance.currentUser!.uid]),
+          'following': FieldValue.arrayRemove([uid]),
         });
 
         await _firestore.collection('users').doc(uid).update({
@@ -129,7 +129,7 @@ class Post_firebase
       else
       {
         await _firestore.collection('users').doc(current_user_uid).update({
-          'following': FieldValue.arrayUnion([FirebaseAuth.instance.currentUser!.uid]),
+          'following': FieldValue.arrayUnion([uid]),
         });
 
         await _firestore.collection('users').doc(uid).update({

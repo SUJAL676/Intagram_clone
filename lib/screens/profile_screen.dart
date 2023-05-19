@@ -41,6 +41,8 @@ class _Profile_ScreenState extends State<Profile_Screen> {
   @override
   Widget build(BuildContext context) {
 
+    String follow_unfollow=widget.followers.contains(FirebaseAuth.instance.currentUser!.uid)?"Following":"Follow";
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -96,7 +98,17 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                                                                                  Future<String> a=Post_firebase().follow_unfollow(
                                                                                      uid: widget.uid, follow: widget.following, followers: widget.followers);
 
-                                                                                 setState(() {});
+                                                                                 if (a=="Remove")
+                                                                                   {
+                                                                                     setState(() {
+                                                                                       follow_unfollow="Follow";
+                                                                                     });
+                                                                                   }
+                                                                                 if (a=="Add"){
+                                                                                   setState(() {
+                                                                                     follow_unfollow="Following";
+                                                                                   });
+                                                                                 }
                                                                                },
                                                                                child: Container(
                                                                                        height: 30,
@@ -107,10 +119,11 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                                                                                              borderRadius: BorderRadius.all(Radius.circular(5)),
                                                                                              color: Colors.blue,),
 
-                                                                                       child: widget.following.contains(FirebaseAuth.instance.currentUser!.uid)?
-                                                                                       const Center(child: Text("Following" ,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),)
-                                                                                       : const Center(child: Text("Follow" ,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),),
-                                                                                           ),
+                                                                                       // child: widget.followers.contains(FirebaseAuth.instance.currentUser!.uid)?
+                                                                                       // const Center(child: Text("Following" ,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),)
+                                                                                       // : const Center(child: Text("Follow" ,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),),
+                                                                                       child: Center(child: Text(follow_unfollow,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),),
+                                                                               ),
                                                                              )
 
 
