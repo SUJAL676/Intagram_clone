@@ -72,7 +72,7 @@ class _androidState extends State<android> {
           Search_Screen(),
           Add_post(),
           Text("Fav"),
-          Profile_Screen(photourl: user.photourl, username: user.username, desc: user.bio, uid: user.uid, followers: user.followers, following: user.following),],
+          Profile_Screen(photourl: user.photourl, username: user.username, desc: user.bio, uid: user.uid),],
         controller: pageController,
         physics: NeverScrollableScrollPhysics(),
         onPageChanged: onpagechnaged,

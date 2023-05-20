@@ -111,9 +111,12 @@ class Post_firebase
   })
   async {
     String current_user_uid = FirebaseAuth.instance.currentUser!.uid;
+    var user_snap=await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    List user_followers=user_snap['followers'];
+
     String result="";
     try{
-      if (follow.contains(uid))
+      if (user_followers.contains(current_user_uid))
       {
         await _firestore.collection('users').doc(current_user_uid).update({
           'following': FieldValue.arrayRemove([uid]),

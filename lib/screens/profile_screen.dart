@@ -11,10 +11,8 @@ class Profile_Screen extends StatefulWidget {
   final String username;
   final String desc;
   final String uid;
-  final List followers;
-  final List following;
 
-  const Profile_Screen({Key? key, required this.photourl, required this.username, required this.desc, required this.uid, required this.followers, required this.following, }) : super(key: key);
+  const Profile_Screen({Key? key, required this.photourl, required this.username, required this.desc, required this.uid,}) : super(key: key);
 
   @override
   State<Profile_Screen> createState() => _Profile_ScreenState();
@@ -29,19 +27,24 @@ class _Profile_ScreenState extends State<Profile_Screen> {
   }
 
   int a=0;
+  List Following=[];
+  List Followers=[];
 
   void get_data()
   async{
     var b=await FirebaseFirestore.instance.collection('post').where('uid',isEqualTo: widget.uid).get();
+    var snap=await FirebaseFirestore.instance.collection('users').doc(widget.uid).get();
     setState(() {
       a=b.docs.length;
+      Following=snap['following'];
+      Followers=snap['followers'];
     });
   }
 
   @override
   Widget build(BuildContext context) {
 
-    String follow_unfollow=widget.followers.contains(FirebaseAuth.instance.currentUser!.uid)?"Following":"Follow";
+    String follow_unfollow=Followers.contains(FirebaseAuth.instance.currentUser!.uid)?"Following":"Follow";
 
     return Scaffold(
       appBar: AppBar(
@@ -70,8 +73,8 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                     Row(
                       children: [
                         column(number: a.toString(), text: "posts"),
-                        column(number: widget.followers.length.toString(), text: "followers"),
-                        column(number: widget.following.length.toString(), text: "following"),
+                        column(number: Followers.length.toString(), text: "followers"),
+                        column(number: Following.length.toString(), text: "following"),
                       ],
                     ),
                     SizedBox(height: 8,),
@@ -96,7 +99,7 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                                                                              : InkWell(
                                                                                onTap: (){
                                                                                  Future<String> a=Post_firebase().follow_unfollow(
-                                                                                     uid: widget.uid, follow: widget.following, followers: widget.followers);
+                                                                                     uid: widget.uid, follow: Following, followers: Followers);
 
                                                                                  if (a=="Remove")
                                                                                    {
