@@ -41,11 +41,12 @@ class _Profile_ScreenState extends State<Profile_Screen> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
-
     bool follow_unfollow=Followers.contains(FirebaseAuth.instance.currentUser!.uid)?true:false;
-
+    var followers_lenght=Followers.length;
+    var following_lenght=Following.length;
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -73,8 +74,8 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                     Row(
                       children: [
                         column(number: a.toString(), text: "posts"),
-                        column(number: Followers.length.toString(), text: "followers"),
-                        column(number: Following.length.toString(), text: "following"),
+                        column(number: followers_lenght.toString(), text: "followers"),
+                        column(number: following_lenght.toString(), text: "following"),
                       ],
                     ),
                     SizedBox(height: 8,),
@@ -101,9 +102,11 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                                                                                  Post_firebase().follow_unfollow(
                                                                                      uid: widget.uid, follow: Following, followers: Followers);
 
-                                                                                 setState(() {
-                                                                                   follow_unfollow=false;
-                                                                                 });
+                                                                                 setState(() => get_data());
+
+                                                                                 ScaffoldMessenger.of(context).showSnackBar(
+                                                                                   SnackBar(content: Text("OPPS"))
+                                                                                 );
                                                                                },
                                                                                child: Container(
                                                                                        height: 30,
@@ -125,9 +128,10 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                             Post_firebase().follow_unfollow(
                                 uid: widget.uid, follow: Following, followers: Followers);
 
-                            setState(() {
-                              follow_unfollow=true;
-                            });
+                            setState(() => get_data());
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("OPPS"))
+                            );
                           },
                           child: Container(
                             height: 30,
