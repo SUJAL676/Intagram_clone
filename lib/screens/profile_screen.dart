@@ -44,7 +44,7 @@ class _Profile_ScreenState extends State<Profile_Screen> {
   @override
   Widget build(BuildContext context) {
 
-    String follow_unfollow=Followers.contains(FirebaseAuth.instance.currentUser!.uid)?"Following":"Follow";
+    bool follow_unfollow=Followers.contains(FirebaseAuth.instance.currentUser!.uid)?true:false;
 
     return Scaffold(
       appBar: AppBar(
@@ -96,22 +96,14 @@ class _Profile_ScreenState extends State<Profile_Screen> {
 
                                                                                        child: const Center(child: Text("Edit Profile"),),),
                         )
-                                                                             : InkWell(
+                                                                             :follow_unfollow? InkWell(
                                                                                onTap: (){
-                                                                                 Future<String> a=Post_firebase().follow_unfollow(
+                                                                                 Post_firebase().follow_unfollow(
                                                                                      uid: widget.uid, follow: Following, followers: Followers);
 
-                                                                                 if (a=="Remove")
-                                                                                   {
-                                                                                     setState(() {
-                                                                                       follow_unfollow="Follow";
-                                                                                     });
-                                                                                   }
-                                                                                 if (a=="Add"){
-                                                                                   setState(() {
-                                                                                     follow_unfollow="Following";
-                                                                                   });
-                                                                                 }
+                                                                                 setState(() {
+                                                                                   follow_unfollow=false;
+                                                                                 });
                                                                                },
                                                                                child: Container(
                                                                                        height: 30,
@@ -125,9 +117,33 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                                                                                        // child: widget.followers.contains(FirebaseAuth.instance.currentUser!.uid)?
                                                                                        // const Center(child: Text("Following" ,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),)
                                                                                        // : const Center(child: Text("Follow" ,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),),
-                                                                                       child: Center(child: Text(follow_unfollow,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),),
+                                                                                       child: Center(child: Text("Following",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),),
                                                                                ),
-                                                                             )
+                                                                             ) :
+                        InkWell(
+                          onTap: (){
+                            Post_firebase().follow_unfollow(
+                                uid: widget.uid, follow: Following, followers: Followers);
+
+                            setState(() {
+                              follow_unfollow=true;
+                            });
+                          },
+                          child: Container(
+                            height: 30,
+                            width: 250,
+
+
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(5)),
+                              color: Colors.blue,),
+
+                            // child: widget.followers.contains(FirebaseAuth.instance.currentUser!.uid)?
+                            // const Center(child: Text("Following" ,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),)
+                            // : const Center(child: Text("Follow" ,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),),
+                            child: Center(child: Text("Follow",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),),
+                          ),
+                        )
 
 
                       ],
