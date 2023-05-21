@@ -20,10 +20,14 @@ class Profile_Screen extends StatefulWidget {
 
 class _Profile_ScreenState extends State<Profile_Screen> {
 
+  bool is_true=true;
   @override
   void initState() {
     super.initState();
     get_data();
+    setState(() {
+      is_true=false;
+    });
   }
 
   int a=0;
@@ -54,7 +58,8 @@ class _Profile_ScreenState extends State<Profile_Screen> {
         backgroundColor: mobileBackgroundColor,
       ),
 
-      body: Container(
+      body:is_true? Center(child: CircularProgressIndicator(),)
+          :Container(
         padding: EdgeInsets.only(left: 15,top: 15,),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,16 +165,45 @@ class _Profile_ScreenState extends State<Profile_Screen> {
               ],
             ),
 
-            SizedBox(height: 20,),
+            const SizedBox(height: 20,),
             Text(" ${widget.username.toUpperCase()}",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
-            SizedBox(height: 3,),
+            const SizedBox(height: 3,),
             Text("  ${widget.desc}"),
-            SizedBox(height: 5,),
+            const SizedBox(height: 5,),
 
-            Divider(
-              thickness: 2,
+            const Divider(thickness: 2,),
 
+            FutureBuilder(
+              future: FirebaseFirestore.instance.collection('post').where('uid',isEqualTo: widget.uid).get(),
+              builder: (context ,snapshot)
+              {
+                if(snapshot.connectionState==ConnectionState.waiting)
+                  {
+                    Center(child: CircularProgressIndicator());
+                  }
+                return GridView.builder(
+                    shrinkWrap: true,
+                    itemCount: (snapshot.data! as dynamic).docs.length,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 5,
+                      mainAxisSpacing: 1.5,
+                      childAspectRatio: 1
+                    ),
+                    itemBuilder: (context,index)
+                {
+                  DocumentSnapshot snap=(snapshot.data! as dynamic).docs[index];
+                  return Container(
+                    child: Image(
+                      image: NetworkImage(snap['postUrl']),
+                      fit: BoxFit.cover,
+                    ),
+                  );
+                });
+
+              },
             )
+
 
           ],
         ),
