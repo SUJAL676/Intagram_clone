@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +54,7 @@ class _Search_ScreenState extends State<Search_Screen> {
         )
       ),
 
-      body:FutureBuilder(
+      body:_isbool?FutureBuilder(
         future: FirebaseFirestore.instance.collection('users').where('username',isEqualTo: controller.text).get(),
         builder: (context,snapshot)
         {
@@ -86,10 +85,40 @@ class _Search_ScreenState extends State<Search_Screen> {
             }
           );
         } ,
-      )
+      ) : post_display()
 
 
 
     );
   }
+}
+
+Container post_display()
+{
+  return Container(
+    margin: EdgeInsets.only(top:15),
+    child: FutureBuilder(
+      future: FirebaseFirestore.instance.collection('post').get(),
+      builder: (context,snapshot)
+      {
+        if(!snapshot.hasData)
+          {
+            return Center(child: CircularProgressIndicator(),);
+          }
+
+        return StaggeredGridView.countBuilder(
+            crossAxisCount: 3,
+            crossAxisSpacing: 5,
+            mainAxisSpacing: 10,
+            itemCount: (snapshot.data! as dynamic).docs.length,
+            itemBuilder: (context,index)=>Image(image: NetworkImage((snapshot.data! as dynamic).docs[index]['postUrl']),)
+            ,
+            staggeredTileBuilder: (index) =>StaggeredTile.count(
+              (index %7 ==0)?2:1,
+              (index%7 ==0)?2:1
+          )
+        );
+      },
+    ),
+  );
 }
