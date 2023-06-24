@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/firebase/post/post_firebase.dart';
+import 'package:instagram_clone/responses/android.dart';
 import 'package:instagram_clone/screens/feed_post.dart';
 import 'package:instagram_clone/utils/color.dart';
 import 'package:instagram_clone/widget/comment_card.dart';
@@ -30,7 +31,7 @@ class _Comment_PostState extends State<Comment_Post> {
 
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext contextl) {
     User user=Provider.of<UserProvider>(context).getUser;
 
     return Scaffold(
@@ -38,7 +39,7 @@ class _Comment_PostState extends State<Comment_Post> {
         centerTitle: false,
         title: Text("COMMENTS"),
         leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> Feed_Post()) );
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> android()) );
         },),
         backgroundColor: mobileBackgroundColor,
       ),
@@ -51,13 +52,16 @@ class _Comment_PostState extends State<Comment_Post> {
             {
               return CircularProgressIndicator();
             }
-          return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (context,index)
+          else
             {
-              return Comment_Card(postid: widget.postid, snapshot: snapshot.data!.docs[index].data(),);
-            },
-          );
+              return ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context,index)
+                {
+                  return Comment_Card(postid: widget.postid, snapshot: snapshot.data!.docs[index].data(),);
+                },
+              );
+            }
         },
       ),
 

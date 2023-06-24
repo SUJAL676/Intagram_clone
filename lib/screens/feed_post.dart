@@ -18,6 +18,7 @@ class _Feed_PostState extends State<Feed_Post> {
       appBar: AppBar(
         backgroundColor: mobileBackgroundColor,
         centerTitle: false,
+        automaticallyImplyLeading: false,
         title: SvgPicture.asset("assets/images/ic_instagram.svg",color: Colors.white,height: 35,),
         actions: [
           IconButton(onPressed: (){}, icon: Icon(Icons.messenger_outline))
