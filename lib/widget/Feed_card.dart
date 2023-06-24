@@ -78,7 +78,12 @@ class Feed_Card extends StatelessWidget {
 
               SizedBox(height: 5,),
 
-              Text("View all 200 comments",style: TextStyle(color: Colors.grey,fontSize: 14,))
+              InkWell(
+                onTap: ()
+                  {
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Comment_Post(postid: snap['postid'])));
+                  },
+                  child: Text("View all comments",style: TextStyle(color: Colors.grey,fontSize: 14,)))
             ],
           ),),
 

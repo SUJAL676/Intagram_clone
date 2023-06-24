@@ -45,7 +45,7 @@ class _Comment_PostState extends State<Comment_Post> {
       ),
 
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('post').doc(widget.postid).collection('comment').snapshots(),
+        stream: FirebaseFirestore.instance.collection('post').doc(widget.postid).collection('comment').orderBy("date_time").snapshots(),
         builder: (context ,AsyncSnapshot<QuerySnapshot<Map<String,dynamic>>>snapshot)
         {
           if (snapshot.connectionState==ConnectionState.waiting)
