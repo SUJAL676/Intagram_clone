@@ -20,10 +20,13 @@ class Profile_Screen extends StatefulWidget {
 
 class _Profile_ScreenState extends State<Profile_Screen> {
 
-  bool is_true=true;
+  bool is_true=false;
   @override
   void initState() {
     super.initState();
+    setState(() {
+      is_true=false;
+    });
     get_data();
     setState(() {
       is_true=false;
@@ -45,10 +48,12 @@ class _Profile_ScreenState extends State<Profile_Screen> {
     });
   }
 
+  bool _isload=false;
+
 
   @override
   Widget build(BuildContext context) {
-    bool follow_unfollow=Followers.contains(FirebaseAuth.instance.currentUser!.uid)?true:false;
+    var follow_unfollow=Followers.contains(FirebaseAuth.instance.currentUser!.uid)? "Following":"Follow";
     var followers_lenght=Followers.length;
     var following_lenght=Following.length;
     return Scaffold(
@@ -99,60 +104,108 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                                                                                                        borderRadius: const BorderRadius.all(Radius.circular(5)),
                                                                                                        color: Colors.black,
                                                                                                       ),
-
                                                                                        child: const Center(child: Text("Edit Profile"),),),
                         )
-                                                                             :follow_unfollow? InkWell(
-                                                                               onTap: (){
-                                                                                 Post_firebase().follow_unfollow(
+                                                                             :InkWell(
+                                                                               onTap: () async {
+                                                                                 setState(() {
+                                                                                   _isload=true;
+                                                                                 });
+                                                                                 String result= await Post_firebase().follow_unfollow(
                                                                                      uid: widget.uid, follow: Following, followers: Followers);
+                                                                                 if(result=="Removed")
+                                                                                   {
+                                                                                     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("UNFOLLOWED")));
+                                                                                     setState(() {
 
-                                                                                 setState(() => get_data());
+                                                                                       followers_lenght=followers_lenght-1;
+                                                                                       follow_unfollow="Followinhfhh";
+                                                                                       _isload=false;
+                                                                                     });
+                                                                                   }
+                                                                                 else if(result=="Followed")
+                                                                                   {
+                                                                                     setState(() {
+                                                                                       followers_lenght=followers_lenght+1;
+                                                                                       follow_unfollow="Followinguigyg";
+                                                                                       _isload=false;
+                                                                                     });
+                                                                                   }
+                                                                                 else
+                                                                                   {
+                                                                                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result.toString())));
+                                                                                     setState(() {
+                                                                                       _isload=false;
+                                                                                     });
+                                                                                   }
 
-                                                                                 ScaffoldMessenger.of(context).showSnackBar(
-                                                                                   SnackBar(content: Text("OPPS"))
-                                                                                 );
+                                                                                 //
+                                                                                 // setState(() => get_data());
+                                                                                 //
+                                                                                 // ScaffoldMessenger.of(context).showSnackBar(
+                                                                                 //   SnackBar(content: Text("OPPS"))
+                                                                                 // );
                                                                                },
                                                                                child: Container(
                                                                                        height: 30,
                                                                                        width: 250,
 
 
-                                                                                       decoration: const BoxDecoration(
+                                                                                       decoration: BoxDecoration(
                                                                                              borderRadius: BorderRadius.all(Radius.circular(5)),
                                                                                              color: Colors.blue,),
 
                                                                                        // child: widget.followers.contains(FirebaseAuth.instance.currentUser!.uid)?
                                                                                        // const Center(child: Text("Following" ,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),)
                                                                                        // : const Center(child: Text("Follow" ,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),),
-                                                                                       child: Center(child: Text("Following",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),),
+                                                                                       child:_isload ? Center(child: CircularProgressIndicator(color: Colors.white,),)
+                                                                                           :Center(child: Text(follow_unfollow,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),),
+
                                                                                ),
-                                                                             ) :
-                        InkWell(
-                          onTap: (){
-                            Post_firebase().follow_unfollow(
-                                uid: widget.uid, follow: Following, followers: Followers);
-
-                            setState(() => get_data());
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("OPPS"))
-                            );
-                          },
-                          child: Container(
-                            height: 30,
-                            width: 250,
-
-
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(5)),
-                              color: Colors.blue,),
-
-                            // child: widget.followers.contains(FirebaseAuth.instance.currentUser!.uid)?
-                            // const Center(child: Text("Following" ,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),)
-                            // : const Center(child: Text("Follow" ,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),),
-                            child: Center(child: Text("Follow",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),),
-                          ),
-                        )
+                                                                             )
+                        //: InkWell(
+                        //   onTap: () async {
+                        //     setState(() {
+                        //       _isload=true;
+                        //     });
+                        //     String result=await Post_firebase().follow_unfollow(
+                        //         uid: widget.uid, follow: Following, followers: Followers);
+                        //     if(result=="Sucess")
+                        //       {
+                        //         setState(() {
+                        //           _isload=false;
+                        //           follow_unfollow=true;
+                        //         });
+                        //       }
+                        //     else
+                        //       {
+                        //         setState(() {
+                        //           _isload=false;
+                        //           follow_unfollow=false;
+                        //         });
+                        //       }
+                        //
+                        //     // setState(() => get_data());
+                        //     // ScaffoldMessenger.of(context).showSnackBar(
+                        //     //     SnackBar(content: Text("OPPS"))
+                        //     // );
+                        //   },
+                        //   child: Container(
+                        //     height: 30,
+                        //     width: 250,
+                        //
+                        //
+                        //     decoration: BoxDecoration(
+                        //       borderRadius: BorderRadius.all(Radius.circular(5)),
+                        //       color: Colors.blue,),
+                        //
+                        //     // child: widget.followers.contains(FirebaseAuth.instance.currentUser!.uid)?
+                        //     // const Center(child: Text("Following" ,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),)
+                        //     // : const Center(child: Text("Follow" ,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),),
+                        //     child:_isload ? Center(child: CircularProgressIndicator(color: Colors.white,),)
+                        //         :Center(child: Text("Follow",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),),
+                        //   ),
+                        // )
 
 
                       ],

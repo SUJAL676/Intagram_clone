@@ -126,7 +126,7 @@ class Post_firebase
           'followers': FieldValue.arrayRemove([FirebaseAuth.instance.currentUser!.uid]),
         });
 
-        result="Remove";
+        return result="Removed";
       }
 
       else
@@ -140,13 +140,13 @@ class Post_firebase
         });
 
 
-        result="Add";
+        return result="Followed";
       }
 
     }
     catch(e)
     {
-      print(e.toString());
+      result=e.toString();
     }
 
     return result;
