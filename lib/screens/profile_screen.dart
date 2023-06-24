@@ -53,9 +53,9 @@ class _Profile_ScreenState extends State<Profile_Screen> {
 
   @override
   Widget build(BuildContext context) {
-    var follow_unfollow=Followers.contains(FirebaseAuth.instance.currentUser!.uid)? "Following":"Follow";
-    var followers_lenght=Followers.length;
-    var following_lenght=Following.length;
+    var _follow_unfollow=Followers.contains(FirebaseAuth.instance.currentUser!.uid)? "Following":"Follow";
+    var _followers_lenght=Followers.length;
+    var _following_lenght=Following.length;
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -84,8 +84,8 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                     Row(
                       children: [
                         column(number: a.toString(), text: "posts"),
-                        column(number: followers_lenght.toString(), text: "followers"),
-                        column(number: following_lenght.toString(), text: "following"),
+                        column(number: _followers_lenght.toString(), text: "followers"),
+                        column(number: _following_lenght.toString(), text: "following"),
                       ],
                     ),
                     SizedBox(height: 8,),
@@ -118,16 +118,18 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                                                                                      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("UNFOLLOWED")));
                                                                                      setState(() {
 
-                                                                                       followers_lenght=followers_lenght-1;
-                                                                                       follow_unfollow="Followinhfhh";
+                                                                                       _followers_lenght=_followers_lenght-1;
+                                                                                       _follow_unfollow="Following";
+                                                                                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result.toString())));
                                                                                        _isload=false;
                                                                                      });
                                                                                    }
                                                                                  else if(result=="Followed")
                                                                                    {
                                                                                      setState(() {
-                                                                                       followers_lenght=followers_lenght+1;
-                                                                                       follow_unfollow="Followinguigyg";
+                                                                                       _followers_lenght=_followers_lenght+1;
+                                                                                       _follow_unfollow="Follow";
+                                                                                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result.toString())));
                                                                                        _isload=false;
                                                                                      });
                                                                                    }
@@ -159,7 +161,7 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                                                                                        // const Center(child: Text("Following" ,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),)
                                                                                        // : const Center(child: Text("Follow" ,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),),
                                                                                        child:_isload ? Center(child: CircularProgressIndicator(color: Colors.white,),)
-                                                                                           :Center(child: Text(follow_unfollow,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),),
+                                                                                           :Center(child: Text(_follow_unfollow,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),),
 
                                                                                ),
                                                                              )
@@ -232,27 +234,31 @@ class _Profile_ScreenState extends State<Profile_Screen> {
               {
                 if(snapshot.connectionState==ConnectionState.waiting)
                   {
-                    Center(child: CircularProgressIndicator());
+                    Expanded(child: Center(child: CircularProgressIndicator(color: Colors.white,)));
                   }
-                return GridView.builder(
-                    shrinkWrap: true,
-                    itemCount: (snapshot.data! as dynamic).docs.length,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 5,
-                      mainAxisSpacing: 1.5,
-                      childAspectRatio: 1
-                    ),
-                    itemBuilder: (context,index)
-                {
-                  DocumentSnapshot snap=(snapshot.data! as dynamic).docs[index];
-                  return Container(
-                    child: Image(
-                      image: NetworkImage(snap['postUrl']),
-                      fit: BoxFit.cover,
-                    ),
-                  );
-                });
+                else 
+                  {
+                    return GridView.builder(
+                        shrinkWrap: true,
+                        itemCount: (snapshot.data! as dynamic).docs.length,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 5,
+                            mainAxisSpacing: 1.5,
+                            childAspectRatio: 1
+                        ),
+                        itemBuilder: (context,index)
+                        {
+                          DocumentSnapshot snap=(snapshot.data! as dynamic).docs[index];
+                          return Container(
+                            child: Image(
+                              image: NetworkImage(snap['postUrl']),
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        });
+                  }
+                return Center();
 
               },
             )

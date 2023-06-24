@@ -61,28 +61,32 @@ class _Search_ScreenState extends State<Search_Screen> {
             {
               CircularProgressIndicator();
             }
-          return ListView.builder(
-            itemCount: (snapshot.data! as dynamic).docs.length,
-            itemBuilder: (context , index)
+          else
             {
-              return InkWell(
-                onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context)=> Profile_Screen(photourl: (snapshot.data! as dynamic).docs[index]['image'],
-                                                          desc: (snapshot.data! as dynamic).docs[index]['bio'],
-                                                          username: (snapshot.data! as dynamic).docs[index]['username'],
-                                                          uid: (snapshot.data! as dynamic).docs[index]['uid'],
-                                                          // followers: (snapshot.data! as dynamic).docs[index]['followers'],
-                                                          // following: (snapshot.data! as dynamic).docs[index]['following'],
-                      )) );
-                },
-                child: ListTile(
-                  leading: CircleAvatar(backgroundImage: NetworkImage((snapshot.data! as dynamic).docs[index]['image']),),
-                  title: Text((snapshot.data! as dynamic).docs[index]['username']),
-                ),
+              return ListView.builder(
+                  itemCount: (snapshot.data! as dynamic).docs.length,
+                  itemBuilder: (context , index)
+                  {
+                    return InkWell(
+                      onTap: (){
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context)=> Profile_Screen(photourl: (snapshot.data! as dynamic).docs[index]['image'],
+                              desc: (snapshot.data! as dynamic).docs[index]['bio'],
+                              username: (snapshot.data! as dynamic).docs[index]['username'],
+                              uid: (snapshot.data! as dynamic).docs[index]['uid'],
+                              // followers: (snapshot.data! as dynamic).docs[index]['followers'],
+                              // following: (snapshot.data! as dynamic).docs[index]['following'],
+                            )) );
+                      },
+                      child: ListTile(
+                        leading: CircleAvatar(backgroundImage: NetworkImage((snapshot.data! as dynamic).docs[index]['image']),),
+                        title: Text((snapshot.data! as dynamic).docs[index]['username']),
+                      ),
+                    );
+                  }
               );
             }
-          );
+          return Center();
         } ,
       ) : post_display()
 
