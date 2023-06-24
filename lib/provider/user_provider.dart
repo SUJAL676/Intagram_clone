@@ -7,7 +7,7 @@ class UserProvider with ChangeNotifier{
   User? _user;
   final Auth _auth=Auth();
 
-  User get getUser => _user!;
+  User get getUser => _user ?? User(email: '', pass: '', username: '', bio: '', photourl: '', followers: [], following: [], uid: '');
 
   Future<void> refreshUser() async
   {

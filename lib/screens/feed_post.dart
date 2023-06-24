@@ -31,13 +31,15 @@ class _Feed_PostState extends State<Feed_Post> {
             {
               return Center(child: CircularProgressIndicator(),);
             }
-          return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (context,index)
-            {
-              return Feed_Card(snap: snapshot.data!.docs[index].data());
-            },
-          );
+          else{
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context,index)
+              {
+                return Feed_Card(snap: snapshot.data!.docs[index].data());
+              },
+            );
+          }
         },
       ),
     );

@@ -20,7 +20,7 @@ class android extends StatefulWidget {
 
 class _androidState extends State<android> {
   var _page=0;
-  late PageController pageController;
+  PageController pageController=PageController();
 
   @override
   void initState() {
@@ -73,7 +73,9 @@ class _androidState extends State<android> {
           Add_post(),
           Text("Fav"),
           Profile_Screen(photourl: user.photourl, username: user.username, desc: user.bio, uid: user.uid),],
-        controller: pageController,
+          // Text("Profile"),],
+
+      controller: pageController,
         physics: NeverScrollableScrollPhysics(),
         onPageChanged: onpagechnaged,
       ),
