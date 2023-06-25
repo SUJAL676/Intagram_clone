@@ -43,14 +43,77 @@ class _Comment_PostState extends State<Comment_Post> {
         backgroundColor: mobileBackgroundColor,
       ),
 
-      body: Column(
-        children: [
-          Container(
-            height: 700,
-            color: Colors.white,
-          )
-        ],
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            Container(
+              height: 713,
+              child: StreamBuilder(
+                        stream: FirebaseFirestore.instance.collection('post').doc(widget.postid).collection('comment').orderBy("date_time").snapshots(),
+                        builder: (context ,AsyncSnapshot<QuerySnapshot<Map<String,dynamic>>>snapshot)
+                        {
+                          if (snapshot.connectionState==ConnectionState.waiting)
+                          {
+                            return CircularProgressIndicator();
+                          }
+                          else
+                          {
+                            return ListView.builder(
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (context,index)
+                              {
+                                return Comment_Card(postid: widget.postid, snapshot: snapshot.data!.docs[index].data(),);
+                              },
+                            );
+                          }
+                        },
+                      ),
+            ),
+            Container(
+              // constraints: BoxConstraints(
+              //     minHeight: 60,
+              //     maxHeight: 100
+              // ),
+              // height: 60,
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Row(
+                  children: [
+                    CircleAvatar(backgroundImage: NetworkImage(user.photourl),),
+                    SizedBox(width: 20,),
+                    Expanded(
+                      child: TextField(
+                        controller: comment,
+                        decoration: const InputDecoration(
+                            hintText: "Write a comment...",
+                            border: InputBorder.none
+                        ),),
+                    ),
+                    InkWell(
+                      onTap: ()
+                      async{
+                        String res=await Post_firebase().post_comment(post_uid: widget.postid, username: user.username, desc: comment.text, profImage: user.photourl);
+                        if(res=="Sucess")
+                        {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("POSTED"),));
+                          comment.clear();
+                        }
+                        else
+                        {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("FAILED"),));
+                        }
+                      },
+                      child: Text("POST", style: TextStyle(color: Colors.blue,fontSize: 18,fontWeight: FontWeight.bold),),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
+
       // body: CustomScrollView(
       //   slivers: [
       //     SliverFillRemaining(
@@ -153,46 +216,46 @@ class _Comment_PostState extends State<Comment_Post> {
       //   ),
       // ),
 
-      bottomNavigationBar: Container(
-        constraints: BoxConstraints(
-          minHeight: 60,
-          maxHeight: 100
-        ),
-        // height: 60,
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: Row(
-            children: [
-              CircleAvatar(backgroundImage: NetworkImage(user.photourl),),
-              SizedBox(width: 20,),
-              Expanded(
-                child: TextField(
-                  controller: comment,
-                  decoration: const InputDecoration(
-                  hintText: "Write a comment...",
-                  border: InputBorder.none
-                ),),
-              ),
-              InkWell(
-                onTap: ()
-                async{
-                  String res=await Post_firebase().post_comment(post_uid: widget.postid, username: user.username, desc: comment.text, profImage: user.photourl);
-                  if(res=="Sucess")
-                    {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("POSTED"),));
-                      comment.clear();
-                    }
-                  else
-                    {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("FAILED"),));
-                    }
-                  },
-                child: Text("POST", style: TextStyle(color: Colors.blue,fontSize: 18,fontWeight: FontWeight.bold),),
-              )
-            ],
-          ),
-        ),
-      ),
+      // bottomNavigationBar: Container(
+      //   constraints: BoxConstraints(
+      //     minHeight: 60,
+      //     maxHeight: 100
+      //   ),
+      //   // height: 60,
+      //   child: Padding(
+      //     padding: EdgeInsets.all(10),
+      //     child: Row(
+      //       children: [
+      //         CircleAvatar(backgroundImage: NetworkImage(user.photourl),),
+      //         SizedBox(width: 20,),
+      //         Expanded(
+      //           child: TextField(
+      //             controller: comment,
+      //             decoration: const InputDecoration(
+      //             hintText: "Write a comment...",
+      //             border: InputBorder.none
+      //           ),),
+      //         ),
+      //         InkWell(
+      //           onTap: ()
+      //           async{
+      //             String res=await Post_firebase().post_comment(post_uid: widget.postid, username: user.username, desc: comment.text, profImage: user.photourl);
+      //             if(res=="Sucess")
+      //               {
+      //                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("POSTED"),));
+      //                 comment.clear();
+      //               }
+      //             else
+      //               {
+      //                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("FAILED"),));
+      //               }
+      //             },
+      //           child: Text("POST", style: TextStyle(color: Colors.blue,fontSize: 18,fontWeight: FontWeight.bold),),
+      //         )
+      //       ],
+      //     ),
+      //   ),
+      // ),
     );
   }
 }
