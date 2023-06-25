@@ -118,20 +118,22 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                                                                                      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("UNFOLLOWED")));
                                                                                      setState(() {
 
-                                                                                       _followers_lenght=_followers_lenght-1;
-                                                                                       _follow_unfollow="Following";
-                                                                                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result.toString())));
-                                                                                       _isload=false;
-                                                                                     });
-                                                                                   }
-                                                                                 else if(result=="Followed")
-                                                                                   {
-                                                                                     setState(() {
-                                                                                       _followers_lenght=_followers_lenght+1;
+                                                                                       _followers_lenght-=1;
                                                                                        _follow_unfollow="Follow";
                                                                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result.toString())));
                                                                                        _isload=false;
                                                                                      });
+                                                                                     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Profile_Screen(photourl: widget.photourl, username: widget.username, desc: widget.desc, uid: widget.uid)) );
+                                                                                   }
+                                                                                 else if(result=="Followed")
+                                                                                   {
+                                                                                     setState(() {
+                                                                                       _followers_lenght+=1;
+                                                                                       _follow_unfollow="Following";
+                                                                                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result.toString())));
+                                                                                       _isload=false;
+                                                                                     });
+                                                                                     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Profile_Screen(photourl: widget.photourl, username: widget.username, desc: widget.desc, uid: widget.uid)));
                                                                                    }
                                                                                  else
                                                                                    {
@@ -164,6 +166,7 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                                                                                            :Center(child: Text(_follow_unfollow,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),),
 
                                                                                ),
+
                                                                              )
                         //: InkWell(
                         //   onTap: () async {
