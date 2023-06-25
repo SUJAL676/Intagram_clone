@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:instagram_clone/screens/chat.dart';
 import 'package:instagram_clone/utils/color.dart';
 import 'package:instagram_clone/widget/Feed_card.dart';
 
@@ -21,7 +22,9 @@ class _Feed_PostState extends State<Feed_Post> {
         automaticallyImplyLeading: false,
         title: SvgPicture.asset("assets/images/ic_instagram.svg",color: Colors.white,height: 35,),
         actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.messenger_outline))
+          IconButton(onPressed: (){
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>Chat()));
+          }, icon: Icon(Icons.messenger_outline))
         ],
       ),
       body: StreamBuilder(

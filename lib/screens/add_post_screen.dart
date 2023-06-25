@@ -103,6 +103,7 @@ class _Add_postState extends State<Add_post> {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: mobileBackgroundColor,
         leading: Icon(Icons.arrow_back),
         title: Text("Post to"),

@@ -18,6 +18,7 @@ class _Search_ScreenState extends State<Search_Screen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: mobileBackgroundColor,
         centerTitle: false,
         title: Expanded(

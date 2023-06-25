@@ -58,6 +58,7 @@ class _Profile_ScreenState extends State<Profile_Screen> {
     var _following_lenght=Following.length;
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: false,
         title: Text(widget.username.toUpperCase()),
         backgroundColor: mobileBackgroundColor,
