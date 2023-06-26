@@ -50,50 +50,85 @@ class _Following_chatState extends State<Following_chat> {
         ),
       ),
 
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              height: 700,
-              child: Expanded(
-                child: stream(),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            height: 700,
+            child: stream()
+          ),
+          Container(
+            padding: const EdgeInsets.only(left: 6,top: 5,right: 6),
+            child: Container(
+              height: 55,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(25)),
+                color: Colors.white10
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.only(left: 6,top: 5,right: 6),
-              child: Container(
-                height: 55,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(25)),
-                  color: Colors.white10
-                ),
-                child: Row(
-                  children: [
-                    const SizedBox(width: 10,),
-                    CircleAvatar(backgroundImage: NetworkImage(user.photourl),),
-                    const SizedBox(width: 15,),
-                    Expanded(
-                      child: TextField(
-                        controller: controller1,
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "Message..."
-                        ),
+              child: Row(
+                children: [
+                  const SizedBox(width: 10,),
+                  CircleAvatar(backgroundImage: NetworkImage(user.photourl),),
+                  const SizedBox(width: 15,),
+                  Expanded(
+                    child: TextField(
+                      controller: controller1,
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Message..."
                       ),
                     ),
-                    IconButton(onPressed: (){},
-                        icon: Icon(Icons.send))
+                  ),
+                  IconButton(onPressed: (){},
+                      icon: Icon(Icons.send))
 
 
-                  ],
-                ),
+                ],
               ),
-            )
+            ),
+          )
 
 
-          ],
-        ),
+        ],
       )
+
+      // body: Stack(
+      //   children: [
+      //     Container(
+      //       margin: const EdgeInsets.only(bottom: 73),
+      //       child: stream(),
+      //     ),
+      //
+      //     Align(
+      //       alignment: Alignment.bottomCenter,
+      //       child: Container(
+      //         margin: const EdgeInsets.all(5),
+      //         child: Row(
+      //           children: [
+      //             const SizedBox(width: 10,),
+      //             CircleAvatar(backgroundImage: NetworkImage(user.photourl),),
+      //             const SizedBox(width: 15,),
+      //             Expanded(
+      //               child: TextField(
+      //                 controller: controller1,
+      //                 decoration: InputDecoration(
+      //                     border: InputBorder.none,
+      //                     hintText: "Message..."
+      //                 ),
+      //               ),
+      //             ),
+      //             IconButton(onPressed: (){},
+      //                 icon: Icon(Icons.send))
+      //
+      //
+      //           ],
+      //         ),
+      //       ),
+      //     )
+      //
+      //   ],
+      // ),
     );
   }
 }
@@ -105,19 +140,22 @@ stream()
     builder: (context,AsyncSnapshot<QuerySnapshot<Map<String,dynamic>>>snapshot)
     {
       if(snapshot.connectionState==ConnectionState.waiting)
-        {
-          return Center(child: CircularProgressIndicator());
-        }
+      {
+        return Center(child: CircularProgressIndicator());
+      }
       else
-        {
-          return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (context,index)
-            {
-              return Following_Chat_Card();
-            },
-          );
-        }
+      {
+        return ListView.builder(
+          itemCount: snapshot.data!.docs.length,
+          itemBuilder: (context,index)
+          {
+            return Align(
+              alignment: Alignment.centerRight,
+              child: Following_Chat_Card()
+            );
+          },
+        );
+      }
     },
   );
 }
