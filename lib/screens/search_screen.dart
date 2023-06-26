@@ -74,7 +74,7 @@ class _Search_ScreenState extends State<Search_Screen> {
                             builder: (context)=> Profile_Screen(photourl: (snapshot.data! as dynamic).docs[index]['image'],
                               desc: (snapshot.data! as dynamic).docs[index]['bio'],
                               username: (snapshot.data! as dynamic).docs[index]['username'],
-                              uid: (snapshot.data! as dynamic).docs[index]['uid'],
+                              uid: (snapshot.data! as dynamic).docs[index]['uid'], isback: true,
                               // followers: (snapshot.data! as dynamic).docs[index]['followers'],
                               // following: (snapshot.data! as dynamic).docs[index]['following'],
                             )) );

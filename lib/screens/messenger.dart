@@ -53,7 +53,7 @@ class _messengerState extends State<messenger> {
         ),
       ),
       body: Container(
-        margin: EdgeInsets.only(left: 10,top: 20),
+        margin: EdgeInsets.only(top: 10),
         child: FutureBuilder(
           future: FirebaseFirestore.instance.collection('users').where('followers',arrayContains: "kcP0lfS8vvM5Fwyw0L7ifj2Y6GR2") .get(),
           builder: (context,AsyncSnapshot snap)

@@ -17,8 +17,8 @@ class Following_chat extends StatefulWidget {
 }
 
 
-
 TextEditingController controller1=TextEditingController();
+
 class _Following_chatState extends State<Following_chat> {
 
   @override
@@ -126,10 +126,20 @@ stream({required DocumentSnapshot snap , required User user})
           itemCount: snapshot.data!.docs.length,
           itemBuilder: (context,index)
           {
-            return Align(
-              alignment: Alignment.centerRight,
-              child: Following_Chat_Card()
-            );
+            if (snapshot.data!.docs[index]["sender_id"]==user.uid)
+              {
+                return Align(
+                    alignment: Alignment.centerRight,
+                    child: Following_Chat_Card(snap: snapshot.data!.docs[index], isreceiver: false,)
+                );
+              }
+            else
+              {
+                return Align(
+                    alignment: Alignment.centerLeft,
+                    child: Following_Chat_Card(snap: snapshot.data!.docs[index], isreceiver: true,)
+                );
+              }
           },
         );
       }
@@ -140,7 +150,7 @@ stream({required DocumentSnapshot snap , required User user})
 send_area({required String photo , required User user , required DocumentSnapshot snap , required BuildContext context})
 {
   return Container(
-    height: 55,
+    height: 65,
     decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(25)),
         color: Colors.white10
@@ -151,16 +161,19 @@ send_area({required String photo , required User user , required DocumentSnapsho
         CircleAvatar(backgroundImage: NetworkImage(photo),),
         const SizedBox(width: 15,),
         Expanded(
-          child: TextField(
-            controller: controller1,
-            decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: "Message..."
+          child: Container(
+            padding: EdgeInsets.only(top: 10),
+            child: TextField(
+              controller: controller1,
+              maxLines: 20,
+              decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: "Message..."
+              ),
             ),
           ),
         ),
         IconButton(onPressed: () async {
-          controller1.clear();
           String a=await Post_firebase().send_chat(
               message: controller1.text,
               sender_name: user.username,
@@ -171,9 +184,11 @@ send_area({required String photo , required User user , required DocumentSnapsho
           if(a=="Sucess")
             {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Send")));
+              controller1.clear();
             }
           else{
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Send")));
+            controller1.clear();
           }
         },
             icon: Icon(Icons.send))

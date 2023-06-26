@@ -11,8 +11,9 @@ class Profile_Screen extends StatefulWidget {
   final String username;
   final String desc;
   final String uid;
+  final bool isback;
 
-  const Profile_Screen({Key? key, required this.photourl, required this.username, required this.desc, required this.uid,}) : super(key: key);
+  const Profile_Screen({Key? key, required this.photourl, required this.username, required this.desc, required this.uid, required this.isback,}) : super(key: key);
 
   @override
   State<Profile_Screen> createState() => _Profile_ScreenState();
@@ -58,7 +59,7 @@ class _Profile_ScreenState extends State<Profile_Screen> {
     var _following_lenght=Following.length;
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: widget.isback,
         centerTitle: false,
         title: Text(widget.username.toUpperCase()),
         backgroundColor: mobileBackgroundColor,
@@ -124,7 +125,7 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                                                                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result.toString())));
                                                                                        _isload=false;
                                                                                      });
-                                                                                     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Profile_Screen(photourl: widget.photourl, username: widget.username, desc: widget.desc, uid: widget.uid)) );
+                                                                                     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Profile_Screen(photourl: widget.photourl, username: widget.username, desc: widget.desc, uid: widget.uid, isback: true,)) );
                                                                                    }
                                                                                  else if(result=="Followed")
                                                                                    {
@@ -134,7 +135,7 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                                                                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result.toString())));
                                                                                        _isload=false;
                                                                                      });
-                                                                                     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Profile_Screen(photourl: widget.photourl, username: widget.username, desc: widget.desc, uid: widget.uid)));
+                                                                                     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Profile_Screen(photourl: widget.photourl, username: widget.username, desc: widget.desc, uid: widget.uid, isback: true,)));
                                                                                    }
                                                                                  else
                                                                                    {
