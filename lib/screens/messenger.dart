@@ -6,6 +6,7 @@ import 'package:instagram_clone/utils/color.dart';
 import 'package:provider/provider.dart';
 import '../models/user.dart';
 import '../provider/user_provider.dart';
+import 'following_chat.dart';
 
 class messenger extends StatefulWidget {
   const messenger({super.key});
@@ -53,7 +54,7 @@ class _messengerState extends State<messenger> {
         ),
       ),
       body: Container(
-        margin: EdgeInsets.only(left: 20,top: 20),
+        margin: EdgeInsets.only(left: 10,top: 20),
         child: FutureBuilder(
           future: FirebaseFirestore.instance.collection('users').where('followers',arrayContains: "kcP0lfS8vvM5Fwyw0L7ifj2Y6GR2") .get(),
           builder: (context,AsyncSnapshot snap)
@@ -68,7 +69,20 @@ class _messengerState extends State<messenger> {
                 itemCount: (snap.data! as dynamic).docs.length,
                 itemBuilder: (context,index)
                 {
-                  return Text("hi");
+                  DocumentSnapshot snaps=(snap.data! as dynamic).docs[index];
+                  return Container(
+                    margin: EdgeInsets.only(bottom: 20),
+                    child: InkWell(
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Following_chat(snap: snaps,))),
+                      child: ListTile(
+                        leading: CircleAvatar(backgroundImage: NetworkImage(snaps["image"]),),
+                        title: Text(snaps["username"] , style: TextStyle(fontSize: 20),),
+                        trailing: Container(
+                            margin: EdgeInsets.only(right: 20),
+                            child: Icon(Icons.messenger_outline)),
+                      ),
+                    ),
+                  );
                 },
               );
             }
