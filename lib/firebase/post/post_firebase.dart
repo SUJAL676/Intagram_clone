@@ -153,5 +153,49 @@ class Post_firebase
 
   }
 
+  Future<String> send_chat(
+  {
+    required String message,
+    required String sender_name,
+    required String sender_id,
+    required String receiver_name,
+    required String receiver_id,
+  }
+      )
+  async {
+    String result="";
+    String message_id=Uuid().v1();
+    try
+    {
+      await _firestore.collection('users').doc(sender_id).collection(receiver_id).doc(message_id).set(
+        {
+          "message" : message,
+          "message_id": message_id,
+          "sender": sender_name,
+          "sender_id": sender_id,
+          "date": DateTime.now(),
+          "receiver_name":receiver_name,
+          "recceiver_id": receiver_id
+        });
+
+      await _firestore.collection('users').doc(receiver_id).collection(sender_id).doc(message_id).set(
+          {
+            "message" : message,
+            "message_id": message_id,
+            "sender": sender_name,
+            "sender_id": sender_id,
+            "date": DateTime.now(),
+            "receiver_name":receiver_name,
+            "recceiver_id": receiver_id
+          });
+      result="Sucess";
+    }
+    catch(e)
+    {
+      result=e.toString();
+    }
+    return result;
+  }
+
 
 }

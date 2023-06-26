@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram_clone/firebase/post/post_firebase.dart';
 import 'package:instagram_clone/utils/color.dart';
 import 'package:instagram_clone/widget/following_chat_card.dart';
 import 'package:provider/provider.dart';
@@ -50,47 +51,23 @@ class _Following_chatState extends State<Following_chat> {
         ),
       ),
 
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Container(
-            height: 700,
-            child: stream()
-          ),
-          Container(
-            padding: const EdgeInsets.only(left: 6,top: 5,right: 6),
-            child: Container(
-              height: 55,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(25)),
-                color: Colors.white10
-              ),
-              child: Row(
-                children: [
-                  const SizedBox(width: 10,),
-                  CircleAvatar(backgroundImage: NetworkImage(user.photourl),),
-                  const SizedBox(width: 15,),
-                  Expanded(
-                    child: TextField(
-                      controller: controller1,
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "Message..."
-                      ),
-                    ),
-                  ),
-                  IconButton(onPressed: (){},
-                      icon: Icon(Icons.send))
-
-
-                ],
-              ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              height: 700,
+              child: stream(snap: widget.snap, user: user)
             ),
-          )
+            Container(
+              padding: const EdgeInsets.only(left: 6,top: 5,right: 6),
+              child: send_area(photo: user.photourl, user: user, snap: widget.snap, context: context)
+            )
 
 
-        ],
+          ],
+        ),
       )
 
       // body: Stack(
@@ -133,10 +110,10 @@ class _Following_chatState extends State<Following_chat> {
   }
 }
 
-stream()
+stream({required DocumentSnapshot snap , required User user})
 {
   return StreamBuilder(
-    stream: FirebaseFirestore.instance.collection('users').snapshots(),
+    stream: FirebaseFirestore.instance.collection('users').doc(user.uid).collection(snap["uid"]).orderBy("date").snapshots(),
     builder: (context,AsyncSnapshot<QuerySnapshot<Map<String,dynamic>>>snapshot)
     {
       if(snapshot.connectionState==ConnectionState.waiting)
@@ -157,5 +134,52 @@ stream()
         );
       }
     },
+  );
+}
+
+send_area({required String photo , required User user , required DocumentSnapshot snap , required BuildContext context})
+{
+  return Container(
+    height: 55,
+    decoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(25)),
+        color: Colors.white10
+    ),
+    child: Row(
+      children: [
+        const SizedBox(width: 10,),
+        CircleAvatar(backgroundImage: NetworkImage(photo),),
+        const SizedBox(width: 15,),
+        Expanded(
+          child: TextField(
+            controller: controller1,
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "Message..."
+            ),
+          ),
+        ),
+        IconButton(onPressed: () async {
+          controller1.clear();
+          String a=await Post_firebase().send_chat(
+              message: controller1.text,
+              sender_name: user.username,
+              sender_id: user.uid,
+              receiver_name: snap["username"],
+              receiver_id: snap["uid"]);
+
+          if(a=="Sucess")
+            {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Send")));
+            }
+          else{
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Send")));
+          }
+        },
+            icon: Icon(Icons.send))
+
+
+      ],
+    ),
   );
 }

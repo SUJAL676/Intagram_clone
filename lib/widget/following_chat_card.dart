@@ -16,7 +16,7 @@ class _Following_Chat_CardState extends State<Following_Chat_Card> {
       margin: EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         color: Colors.white12,
-        borderRadius: BorderRadius.all(Radius.circular(20),).copyWith(bottomRight: Radius.zero)
+        borderRadius: BorderRadius.all(Radius.circular(13),).copyWith(bottomRight: Radius.zero)
       ),
       child: Text("hi"),
     );
