@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/responses/android.dart';
-import 'package:instagram_clone/screens/feed_post.dart';
 import 'package:instagram_clone/utils/color.dart';
 import 'package:provider/provider.dart';
 import '../models/user.dart';
@@ -73,7 +72,7 @@ class _messengerState extends State<messenger> {
                   return Container(
                     margin: EdgeInsets.only(bottom: 20),
                     child: InkWell(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Following_chat(snap: snaps,))),
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Following_chat(snap: snaps))),
                       child: ListTile(
                         leading: CircleAvatar(backgroundImage: NetworkImage(snaps["image"]),),
                         title: Text(snaps["username"] , style: TextStyle(fontSize: 20),),
