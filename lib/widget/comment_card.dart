@@ -17,11 +17,17 @@ class _Comment_CardState extends State<Comment_Card>
   @override
   Widget build(BuildContext context)
   {
+    var size=MediaQuery.of(context).size;
    DateTime dateTime=widget.snapshot['date_time'].toDate();
    String formatted_date=DateFormat('dd/MM/yy').format(dateTime);
 
-    return Container
-      (
+    return Container(
+      // constraints: BoxConstraints(
+      //   minWidth: size.width * 0.5,
+      //   maxWidth: size.width * 0.9,
+      //   maxHeight: 200,
+      //   minHeight: 10,
+      // ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -32,12 +38,7 @@ class _Comment_CardState extends State<Comment_Card>
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Text(widget.snapshot['username'],style: TextStyle(fontWeight: FontWeight.bold),),
-                  SizedBox(width: 10,),
-                  Text(widget.snapshot['desc']),
-                ],),
+              Text("${widget.snapshot['username']}   ${widget.snapshot['desc']}",style: TextStyle(fontWeight: FontWeight.bold),),
               SizedBox(height: 3,),
               Text(formatted_date),
               SizedBox(height: 25,)

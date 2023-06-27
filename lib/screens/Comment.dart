@@ -46,37 +46,37 @@ class _Coomment_PostState extends State<Coomment_Post> {
         ),
         backgroundColor: mobileBackgroundColor,
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverFillRemaining(
-            child: StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('post')
-                  .doc(widget.postid)
-                  .collection('comment')
-                  .orderBy("date_time")
-                  .snapshots(),
-              builder: (context,
-                  AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-                  snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else {
-                  return ListView.builder(
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      return Comment_Card(
-                        postid: widget.postid,
-                        snapshot: snapshot.data!.docs[index].data(),
-                      );
-                    },
-                  );
-                }
-              },
-            ),
-          ),
-        ],
-      ),
+      // body: CustomScrollView(
+      //   slivers: [
+      //     SliverFillRemaining(
+      //       child: StreamBuilder(
+      //         stream: FirebaseFirestore.instance
+      //             .collection('post')
+      //             .doc(widget.postid)
+      //             .collection('comment')
+      //             .orderBy("date_time")
+      //             .snapshots(),
+      //         builder: (context,
+      //             AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+      //             snapshot) {
+      //           if (snapshot.connectionState == ConnectionState.waiting) {
+      //             return Center(child: CircularProgressIndicator(color: Colors.white,));
+      //           } else {
+      //             return ListView.builder(
+      //               itemCount: snapshot.data!.docs.length,
+      //               itemBuilder: (context, index) {
+      //                 return Comment_Card(
+      //                   postid: widget.postid,
+      //                   snapshot: snapshot.data!.docs[index].data(),
+      //                 );
+      //               },
+      //             );
+      //           }
+      //         },
+      //       ),
+      //     ),
+      //   ],
+      // ),
       bottomNavigationBar: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Container(

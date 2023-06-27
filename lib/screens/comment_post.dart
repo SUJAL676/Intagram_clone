@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/firebase/post/post_firebase.dart';
 import 'package:instagram_clone/responses/android.dart';
+import 'package:instagram_clone/screens/following_chat.dart';
 import 'package:instagram_clone/utils/color.dart';
 import 'package:instagram_clone/widget/comment_card.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,7 @@ class Comment_Post extends StatefulWidget {
 class _Comment_PostState extends State<Comment_Post> {
 
   TextEditingController comment=TextEditingController();
+  FocusNode focusnode=FocusNode();
 
   @override
   void dispose()
@@ -31,6 +33,7 @@ class _Comment_PostState extends State<Comment_Post> {
 
   @override
   Widget build(BuildContext contextl) {
+    var size=MediaQuery.of(context).size;
     User user=Provider.of<UserProvider>(context).getUser;
 
     return Scaffold(
@@ -48,14 +51,14 @@ class _Comment_PostState extends State<Comment_Post> {
         child: Column(
           children: [
             Container(
-              height: 713,
+              height: size.height *0.79,
               child: StreamBuilder(
                         stream: FirebaseFirestore.instance.collection('post').doc(widget.postid).collection('comment').orderBy("date_time").snapshots(),
                         builder: (context ,AsyncSnapshot<QuerySnapshot<Map<String,dynamic>>>snapshot)
                         {
                           if (snapshot.connectionState==ConnectionState.waiting)
                           {
-                            return CircularProgressIndicator();
+                            return Center(child: CircularProgressIndicator());
                           }
                           else
                           {
@@ -84,7 +87,10 @@ class _Comment_PostState extends State<Comment_Post> {
                     SizedBox(width: 20,),
                     Expanded(
                       child: TextField(
+                        focusNode: focusnode,
                         controller: comment,
+                        maxLines: 20,
+                        minLines: 1,
                         decoration: const InputDecoration(
                             hintText: "Write a comment...",
                             border: InputBorder.none
@@ -93,16 +99,26 @@ class _Comment_PostState extends State<Comment_Post> {
                     InkWell(
                       onTap: ()
                       async{
-                        String res=await Post_firebase().post_comment(post_uid: widget.postid, username: user.username, desc: comment.text, profImage: user.photourl);
-                        if(res=="Sucess")
-                        {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("POSTED"),));
-                          comment.clear();
-                        }
+
+                        if(comment.text.length>30)
+                          {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("TYPE SHORTER COMMENT")));
+                          }
                         else
-                        {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("FAILED"),));
-                        }
+                          {
+                            String res=await Post_firebase().post_comment(post_uid: widget.postid, username: user.username, desc: comment.text, profImage: user.photourl);
+                            if(res=="Sucess")
+                            {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("POSTED"),));
+                              comment.clear();
+                              focusnode.unfocus();
+                            }
+                            else
+                            {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("FAILED"),));
+                            }
+                          }
+
                       },
                       child: Text("POST", style: TextStyle(color: Colors.blue,fontSize: 18,fontWeight: FontWeight.bold),),
                     )

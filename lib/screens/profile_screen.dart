@@ -95,10 +95,12 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                       children: [
                         SizedBox(width: 15,),
                         widget.uid == FirebaseAuth.instance.currentUser!.uid ? InkWell(
-                                                                               onTap: (){},
+                                                                               onTap: (){
+                                                                                 FirebaseAuth.instance.signOut();
+                                                                               },
                                                                                child: Container(
                                                                                       height: 30,
-                                                                                      width: 250,
+                                                                                      width: 225,
                                                                                        decoration: BoxDecoration(
                                                                                                        border: Border.all(
                                                                                                                color: Colors.white,
@@ -106,7 +108,7 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                                                                                                        borderRadius: const BorderRadius.all(Radius.circular(5)),
                                                                                                        color: Colors.black,
                                                                                                       ),
-                                                                                       child: const Center(child: Text("Edit Profile"),),),
+                                                                                       child: const Center(child: Text("Log Out"),),),
                         )
                                                                              :InkWell(
                                                                                onTap: () async {

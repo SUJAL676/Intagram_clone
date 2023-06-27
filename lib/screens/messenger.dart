@@ -55,7 +55,7 @@ class _messengerState extends State<messenger> {
       body: Container(
         margin: EdgeInsets.only(top: 10),
         child: FutureBuilder(
-          future: FirebaseFirestore.instance.collection('users').where('followers',arrayContains: "kcP0lfS8vvM5Fwyw0L7ifj2Y6GR2") .get(),
+          future: FirebaseFirestore.instance.collection('users').where('followers',arrayContains: user.uid) .get(),
           builder: (context,AsyncSnapshot snap)
           {
             if(snap.connectionState==ConnectionState.waiting)
