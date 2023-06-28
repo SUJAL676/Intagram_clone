@@ -61,13 +61,13 @@ class _loginState extends State<login> {
     return Scaffold(
       body: SafeArea(child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 32),
+        height: MediaQuery.of(context).size.height,
         width: double.infinity,
         child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 200),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.4),
               SvgPicture.asset("assets/images/ic_instagram.svg",color: primaryColor,
               height: 64,),
               const SizedBox(height: 50,),
