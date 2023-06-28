@@ -67,7 +67,7 @@ class _loginState extends State<login> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.4),
+              SizedBox(height: 30),
               SvgPicture.asset("assets/images/ic_instagram.svg",color: primaryColor,
               height: 64,),
               const SizedBox(height: 50,),
