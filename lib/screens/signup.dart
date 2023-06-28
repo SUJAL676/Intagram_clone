@@ -24,7 +24,7 @@ class _signup extends State<signup> {
   final TextEditingController pass=TextEditingController();
   final TextEditingController user=TextEditingController();
   final TextEditingController bio=TextEditingController();
-  Uint8List? image;
+  Uint8List? image =null;
   bool isloading=false;
 
   @override
@@ -95,25 +95,34 @@ class _signup extends State<signup> {
               InkWell(
                 onTap: ()
                 async {
-                  setState(() {
-                    isloading=true;
-                  });
 
-                  String a=await Auth().signUpUser(email: email.text, pass: pass.text, username: user.text, bio: bio.text, file: image!,);
-
-                  setState(() {
-                    isloading=false;
-                  });
-
-                  if (a=="Sucess")
+                  if(user.text.isNotEmpty && email.text.isNotEmpty&&pass.text.isNotEmpty&&bio.text.isNotEmpty&& (image != null))
                     {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => responsive_layout(Android: android(), Web: web()) )
-                      );
+
+                      setState(() {
+                        isloading=true;
+                      });
+
+                      String a=await Auth().signUpUser(email: email.text, pass: pass.text, username: user.text, bio: bio.text, file: image!,);
+
+                      setState(() {
+                        isloading=false;
+                      });
+
+                      if (a=="Sucess")
+                      {
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) => responsive_layout(Android: android(), Web: web()) )
+                        );
+                      }
+                      else
+                      {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(a.toString())));
+                      }
                     }
                   else
                     {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(a.toString())));
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter each details")));
                     }
 
                 },
